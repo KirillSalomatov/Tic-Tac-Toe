@@ -1,0 +1,436 @@
+import sys
+import random
+
+
+N, M = 3, 3
+field = []
+for i in range(N):
+    field.append(list('_' * M))
+
+
+def input_line_number():
+    try:
+        x = 0
+        while x < 1 or x > 3:
+            x = int(input('Введите номер строки (число от 1 до 3):'))
+        return x
+    except ValueError:
+        print('Вы ввели ни числовой тип данных, программа будет завершена!')
+        sys.exit()
+
+
+def input_column_number():
+    try:
+        x = 0
+        while x < 1 or x > 3:
+            x = int(input('Введите номер столбца (число от 1 до 3):'))
+        return x
+    except ValueError:
+        print('Вы ввели ни числовой тип данных, программа будет завершена!')
+        sys.exit()
+
+
+def show(x):
+    for i in x:
+        for z in i:
+            print(z, end=' ')
+        print()
+
+
+def player_turn():
+    global field
+    print("Ваш ход!")
+    line = input_line_number() - 1
+    column = input_column_number() - 1
+    if field[line][column] == '_':
+        field[line][column] = 'X'
+        show(field)
+        win_condition()
+    else:
+        print("Данная ячейка уже занята! Программа будет завершена!")
+        sys.exit()
+
+
+def win_condition():
+    global field
+    player_win_condition1 = field[0][0] == field[0][1] == field[0][2] == 'X'
+    player_win_condition2 = field[1][0] == field[1][1] == field[1][2] == 'X'
+    player_win_condition3 = field[2][0] == field[2][1] == field[2][2] == 'X'
+    player_win_condition4 = field[0][0] == field[1][0] == field[2][0] == 'X'
+    player_win_condition5 = field[0][1] == field[1][1] == field[2][1] == 'X'
+    player_win_condition6 = field[0][2] == field[1][2] == field[2][2] == 'X'
+    player_win_condition7 = field[0][0] == field[1][1] == field[2][2] == 'X'
+    player_win_condition8 = field[0][2] == field[1][1] == field[2][0] == 'X'
+    player_final_win_condition = (player_win_condition1 or player_win_condition2 or player_win_condition3 or
+                                  player_win_condition4 or player_win_condition5 or player_win_condition6 or
+                                  player_win_condition7 or player_win_condition8)
+
+    bot_win_condition1 = field[0][0] == field[0][1] == field[0][2] == 'O'
+    bot_win_condition2 = field[1][0] == field[1][1] == field[1][2] == 'O'
+    bot_win_condition3 = field[2][0] == field[2][1] == field[2][2] == 'O'
+    bot_win_condition4 = field[0][0] == field[1][0] == field[2][0] == 'O'
+    bot_win_condition5 = field[0][1] == field[1][1] == field[2][1] == 'O'
+    bot_win_condition6 = field[0][2] == field[1][2] == field[2][2] == 'O'
+    bot_win_condition7 = field[0][0] == field[1][1] == field[2][2] == 'O'
+    bot_win_condition8 = field[0][2] == field[1][1] == field[2][0] == 'O'
+    bot_final_win_condition = (bot_win_condition1 or bot_win_condition2 or bot_win_condition3 or
+                               bot_win_condition4 or bot_win_condition5 or bot_win_condition6 or
+                               bot_win_condition7 or bot_win_condition8)
+    if player_final_win_condition or bot_final_win_condition is True:
+        print("У нас есть победитель!!!")
+        if player_final_win_condition is True:
+            print("Это Вы!!!")
+            sys.exit()
+        else:
+            print('Это компьютер!!!\nНо не растраивайтесь, в другой раз Вам повезет больше.')
+            sys.exit()
+
+
+def bot_first_turn():
+    global field
+    print('Ход компьютера!')
+    if field[1][1] != 'X':
+        field[1][1] = 'O'
+        show(field)
+    else:
+        z = random.randint(1, 4)
+        if z == 1:
+            field[0][0] = 'O'
+            show(field)
+        elif z == 2:
+            field[0][2] = 'O'
+            show(field)
+        elif z == 3:
+            field[2][2] = 'O'
+            show(field)
+        elif z == 4:
+            field[2][0] = 'O'
+            show(field)
+
+
+def bot_second_turn_then_bot_first():
+    print('Ход компьютера!')
+    global field
+    if (field[0][1] or field[1][0] or field[1][2] or field[2][1]) == "X":
+        z = random.randint(1, 4)
+        if z == 1:
+            field[0][0] = 'O'
+            show(field)
+        elif z == 2:
+            field[0][2] = 'O'
+            show(field)
+        elif z == 3:
+            field[2][2] = 'O'
+            show(field)
+        elif z == 4:
+            field[2][0] = 'O'
+            show(field)
+    else:
+        z = random.randint(1, 8)
+        if (z == 1) and field[0][0] != 'X':
+            field[0][0] = 'O'
+            show(field)
+        elif (z == 2) and field[0][1] != 'X':
+            field[0][1] = 'O'
+            show(field)
+        elif (z == 3) and field[0][2] != 'X':
+            field[0][2] = 'O'
+            show(field)
+        elif (z == 4) and field[1][2] != 'X':
+            field[1][2] = 'O'
+            show(field)
+        elif (z == 5) and field[2][2] != 'X':
+            field[2][2] = 'O'
+            show(field)
+        elif (z == 6) and field[2][1] != 'X':
+            field[2][1] = 'O'
+            show(field)
+        elif (z == 7) and field[2][0] != 'X':
+            field[2][0] = 'O'
+            show(field)
+        elif (z == 8) and field[1][0] != 'X':
+            field[1][0] = 'O'
+            show(field)
+
+
+def add_elem():
+    global field
+    d = []
+    w = 0
+    for i in field:
+        z = 0
+        for x in i:
+            if x == '_':
+                d.append((w, z))
+                z += 1
+        w += 1
+    x = random.randint(0, len(d)-1)
+    y = 0
+    for i in d:
+        if y == x:
+            field[i[0]][i[1]] = 'O'
+            break
+        y += 1
+
+
+def bot_next_turn():
+    print('Ход компьютера!')
+    global field
+    if (field[0][0] == field[0][1] == "O") and (field[0][2] != 'X'):
+        field[0][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][1] == field[0][2] == 'O') and (field[0][0] != 'X'):
+        field[0][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[0][2] == 'O') and (field[0][1] != 'X'):
+        field[0][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][0] == field[1][1] == "O") and (field[1][2] != 'X'):
+        field[1][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][1] == field[1][2] == 'O') and (field[1][0] != 'X'):
+        field[1][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][0] == field[1][2] == 'O') and (field[1][1] != 'X'):
+        field[1][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[2][0] == field[2][1] == "O") and (field[2][2] != 'X'):
+        field[2][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[2][1] == field[2][2] == 'O') and (field[2][0] != 'X'):
+        field[2][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[2][0] == field[2][2] == 'O') and (field[2][1] != 'X'):
+        field[2][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[1][0] == 'O') and (field[2][0] != 'X'):
+        field[2][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][0] == field[2][0] == 'O') and (field[0][0] != 'X'):
+        field[0][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[2][0] == 'O') and (field[1][0] != 'X'):
+        field[1][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][1] == field[1][1] == 'O') and (field[2][1] != 'X'):
+        field[2][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][1] == field[2][1] == 'O') and (field[0][1] != 'X'):
+        field[0][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][1] == field[2][1] == 'O') and (field[1][1] != 'X'):
+        field[1][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][2] == field[1][2] == 'O') and (field[2][2] != 'X'):
+        field[2][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][2] == field[2][2] == 'O') and (field[0][2] != 'X'):
+        field[0][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][2] == field[2][2] == 'O') and (field[1][2] != 'X'):
+        field[1][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[1][1] == 'O') and (field[2][2] != 'X'):
+        field[2][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][1] == field[2][2] == 'O') and (field[0][0] != 'X'):
+        field[0][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[2][2] == 'O') and (field[1][1] != 'X'):
+        field[1][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][2] == field[1][1] == 'O') and (field[2][0] != 'X'):
+        field[2][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][1] == field[2][0] == 'O') and (field[0][2] != 'X'):
+        field[0][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][2] == field[2][0] == 'O') and (field[1][1] != 'X'):
+        field[1][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[0][1] == "X") and (field[0][2] != 'O'):
+        field[0][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][1] == field[0][2] == 'X') and (field[0][0] != 'O'):
+        field[0][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[0][2] == 'X') and (field[0][1] != 'O'):
+        field[0][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][0] == field[1][1] == "X") and (field[1][2] != 'O'):
+        field[1][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][1] == field[1][2] == 'X') and (field[1][0] != 'O'):
+        field[1][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][0] == field[1][2] == 'X') and (field[1][1] != 'O'):
+        field[1][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[2][0] == field[2][1] == "X") and (field[2][2] != 'O'):
+        field[2][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[2][1] == field[2][2] == 'X') and (field[2][0] != 'O'):
+        field[2][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[2][0] == field[2][2] == 'X') and (field[2][1] != 'O'):
+        field[2][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[1][0] == 'X') and (field[2][0] != 'O'):
+        field[2][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][0] == field[2][0] == 'X') and (field[0][0] != 'O'):
+        field[0][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[2][0] == 'X') and (field[1][0] != 'O'):
+        field[1][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][1] == field[1][1] == 'X') and (field[2][1] != 'O'):
+        field[2][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][1] == field[2][1] == 'X') and (field[0][1] != 'O'):
+        field[0][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][1] == field[2][1] == 'X') and (field[1][1] != 'O'):
+        field[1][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][2] == field[1][2] == 'X') and (field[2][2] != 'O'):
+        field[2][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][2] == field[2][2] == 'X') and (field[0][2] != 'O'):
+        field[0][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][2] == field[2][2] == 'X') and (field[1][2] != 'O'):
+        field[1][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[1][1] == 'X') and (field[2][2] != 'O'):
+        field[2][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][1] == field[2][2] == 'X') and (field[0][0] != 'O'):
+        field[0][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][0] == field[2][2] == 'X') and (field[1][1] != 'O'):
+        field[1][1] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][2] == field[1][1] == 'X') and (field[2][0] != 'O'):
+        field[2][0] = 'O'
+        show(field)
+        win_condition()
+    elif (field[1][1] == field[2][0] == 'X') and (field[0][2] != 'O'):
+        field[0][2] = 'O'
+        show(field)
+        win_condition()
+    elif (field[0][2] == field[2][0] == 'X') and (field[1][1] != 'O'):
+        field[1][1] = 'O'
+        show(field)
+        win_condition()
+    else:
+        add_elem()
+        show(field)
+        win_condition()
+
+
+def whos_first_turn():
+    print('Давайте узнаем кто ходит первым!')
+    try:
+        x = 0
+        while x < 1 or x > 99:
+            x = int(input('Введите число от 1 до 99: '))
+    except ValueError:
+        print('Вы ввели ни числовой тип данных, программа будет завершена!')
+        sys.exit()
+    z = random.randint(1, 99)
+    print(f"А теперь давайте узнаем сколько выбросил компьютер.\nКомпьютер выбросил: {z}")
+    if x > z:
+        print("Так как вы выбросили больше, вы ходите первым!")
+        return 1
+    elif x < z:
+        print('Компьютер выбросил больше. Он ходит первым.')
+        return 2
+    else:
+        print('Вы и компьютер выбросили одинаковое число, быть такого не может.')
+        z = random.randint(1, 99)
+        print(f'Компьютер выбросил: {z}')
+        if x > z:
+            print("Так как вы выбросиле больше, вы ходите первым!")
+            return 1
+        elif x < z:
+            print('Компьютер выбросил больше. Он ходит первым.')
+            return 2
+
+
+def start_game():
+    print('Добро пожаловать в игру "Крестики нолики"')
+    x = whos_first_turn()
+    if x == 1:
+        show(field)
+        player_turn()
+        bot_first_turn()
+        player_turn()
+        bot_next_turn()
+        player_turn()
+        bot_next_turn()
+        player_turn()
+        bot_next_turn()
+        player_turn()
+        print("Ходы закончились! Похоже у нас ничья!!!")
+        sys.exit()
+    else:
+        bot_first_turn()
+        player_turn()
+        bot_second_turn_then_bot_first()
+        player_turn()
+        bot_next_turn()
+        player_turn()
+        bot_next_turn()
+        player_turn()
+        bot_next_turn()
+        print("Ходы закончились! Похоже у нас ничья!!!")
+        sys.exit()
+
+
+start_game()
