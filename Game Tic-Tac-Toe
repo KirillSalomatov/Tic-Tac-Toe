@@ -162,7 +162,7 @@ def add_elem():
         for x in i:
             if x == '_':
                 d.append((w, z))
-                z += 1
+            z += 1
         w += 1
     x = random.randint(0, len(d)-1)
     y = 0
